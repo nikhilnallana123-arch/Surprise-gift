@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For JYOOO 💖 - Special Surprise</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f3eafa;
+            color: #4a3b5c;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .phone-frame {
+            width: 100%;
+            max-width: 380px;
+            background: #ffffff;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(106, 76, 147, 0.2);
+            overflow: hidden;
+            border: 2px solid #f8bbd0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-align: center;
+            min-height: 420px;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            color: #7c3aed;
+        }
+
+        p {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .btn {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            transition: 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Music Bar */
+        .music-player {
+            background: #f3e8ff;
+            border-radius: 30px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #d8b4fe;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #6b46c1;
+            margin-bottom: 5px;
+        }
+
+        .music-btn {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        /* Photos Grid */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            width: 100%;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .photo-grid img {
+            width: 100%;
+            height: 125px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid #f3eafa;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        }
+
+        /* Flip Cards Grid */
+        .flip-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .flip-card {
+            background: #faf5ff;
+            border: 2px dashed #d8b4fe;
+            border-radius: 12px;
+            padding: 12px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #6b46c1;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .flip-card.revealed {
+            background: #8b5cf6;
+            color: white;
+            border-style: solid;
+        }
+
+        /* Floating Love Emojis on Click */
+        .floating-emoji {
+            position: absolute;
+            font-size: 24px;
+            pointer-events: none;
+            animation: floatUpFade 1.2s ease-out forwards;
+            z-index: 100;
+        }
+
+        @keyframes floatUpFade {
+            0% {
+                transform: translateY(0) scale(0.6);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-90px) scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        /* Lock Screen */
+        .lock-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid #d8b4fe;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .pass-input {
+            width: 160px;
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            border: 2px solid #8b5cf6;
+            border-radius: 10px;
+            outline: none;
+            color: #6b46c1;
+        }
+
+        .error-msg {
+            color: red;
+            font-size: 0.75rem;
+            display: none;
+        }
+
+        /* Final Note Box */
+        .note-box {
+            background: #faf5ff;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px dashed #8b5cf6;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #4a3b5c;
+            text-align: left;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Audio -->
+    <audio id="bg-music" preload="auto">
+        <source src="reelexo__01_20260801_190908_675.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="phone-frame">
+        
+        <!-- Music Bar -->
+        <div class="music-player">
+            <span>🎵 Perfect</span>
+            <button class="music-btn" id="play-btn" onclick="toggleMusic()">Play Music</button>
+        </div>
+
+        <!-- Slide 1: Intro -->
+        <div id="slide-1" class="screen active">
+            <h2>For My Favourite Person 💖</h2>
+            <p>Nee kosam oka special surprise undi...</p>
+            <div style="font-size: 50px; margin: 5px 0;">💌</div>
+            <button class="btn" onclick="nextSlide(2, event)">Tap to Open ✨</button>
+        </div>
+
+        <!-- Slide 2: 6 Photos Grid -->
+        <div id="slide-2" class="screen">
+            <h2>My Favourite Person 🎀</h2>
+            <div class="photo-grid">
+                <img src="1.jpg" alt="Photo 1">
+                <img src="2.jpg" alt="Photo 2">
+                <img src="3.jpg" alt="Photo 3">
+                <img src="4.jpg" alt="Photo 4">
+                <img src="5.jpg" alt="Photo 5">
+                <img src="6.jpg" alt="Photo 6">
+            </div>
+            <button class="btn" onclick="nextSlide(3, event)">Tap to Flip →</button>
+        </div>
+
+        <!-- Slide 3: Tap to Flip Cards -->
+        <div id="slide-3" class="screen">
+            <h2>The Memory Wall</h2>
+            <p>Tap each card to reveal 💜</p>
+            <div class="flip-grid">
+                <div class="flip-card" onclick="revealCard(this, event, 'my favourite person in the world 💖')">Tap to Flip 🎀</div>
+                <div class="flip-card" onclick="revealCard(this, event, 'you are more than a friend to me ✨')">Tap to Flip 🎀</div>
+                <div class="flip-card" onclick="revealCard(this, event, 'i love you too much 💕')">Tap to Flip 🎀</div>
+                <div class="flip-card" onclick="revealCard(this, event, 'you are my safe place ✨')">Tap to Flip 🎀</div>
+            </div>
+            <button class="btn" onclick="nextSlide(4, event)" style="margin-top: 10px;">Lock Screen →</button>
+        </div>
+
+        <!-- Slide 4: Lock Screen -->
+        <div id="slide-4" class="screen">
+            <h2>🔒 Security Check</h2>
+            <div class="lock-box">
+                <p>Na mobile password...</p>
+                <input type="password" id="passInput" class="pass-input" maxlength="4" placeholder="••••">
+                <div id="errorMsg" class="error-msg">Wrong Password! Hint: Try '0210' 😉</div>
+                <button class="btn" onclick="checkPassword(event)">Unlock 🔓</button>
+            </div>
+        </div>
+
+        <!-- Slide 5: Final Note -->
+        <div id="slide-5" class="screen">
+            <h2>Read Final Letter 💌</h2>
+            <div class="note-box">
+                <p>Hey JYOOO 🎀<br><br>
+                E lokam lo enno kotha parichayalu avutayi... kani natho unna prati roju nuvvu naaku entha special oo nenu maatalalo cheppalenu.<br><br>
+                Niku cheppina sarey ardham kadhu...<br><br>
+                Naaku life lo nuvvu ichina support, nuvvu chupinchina prema antha edho peddha adrushtam laga anipistundi....<br><br>
+                Nenu chala luckyy ni lanti ammayii naku dorakadham 🎀<br><br>
+                Thank you for being my everything, forever and always! ❤️</p>
+            </div>
+            <button class="btn" onclick="nextSlide(1, event)">↺ Start Over</button>
+        </div>
+
+    </div>
+
+    <script>
+        function spawnFloatingEmojis(e) {
+            const emojis = ['❤️', '💖', '💕', '✨', '💘'];
+            const rect = e.target.getBoundingClientRect();
+            
+            for (let i = 0; i < 4; i++) {
+                const emoji = document.createElement('div');
+                emoji.className = 'floating-emoji';
+                emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                
+                const offsetX = (Math.random() - 0.5) * 60;
+                emoji.style.left = (rect.left + rect.width / 2 + offsetX) + 'px';
+                emoji.style.top = (rect.top + 10) + 'px';
+                
+                document.body.appendChild(emoji);
+
+                setTimeout(() => {
+                    emoji.remove();
+                }, 1200);
+            }
+        }
+
+        function nextSlide(num, event) {
+            spawnFloatingEmojis(event);
+            setTimeout(() => {
+                document.querySelectorAll('.screen').forEach(function(s) {
+                    s.classList.remove('active');
+                });
+                var target = document.getElementById('slide-' + num);
+                if (target) {
+                    target.classList.add('active');
+                }
+            }, 200);
+        }
+
+        function toggleMusic() {
+            var music = document.getElementById('bg-music');
+            var btn = document.getElementById('play-btn');
+            if (music.paused) {
+                music.play().then(() => {
+                    btn.innerText = "Pause ⏸️";
+                }).catch(() => {
+                    alert("Song play avvadamledu, file name check cheyandi!");
+                });
+            } else {
+                music.pause();
+                btn.innerText = "Play 🎶";
+            }
+        }
+
+        function revealCard(card, event, text) {
+            spawnFloatingEmojis(event);
+            card.innerText = text;
+            card.classList.add('revealed');
+        }
+
+        function checkPassword(event) {
+            spawnFloatingEmojis(event);
+            var pass = document.getElementById('passInput').value;
+            var error = document.getElementById('errorMsg');
+            setTimeout(() => {
+                if (pass === "0210") {
+                    error.style.display = "none";
+                    nextSlide(5, event);
+                } else {
+                    error.style.display = "block";
+                }
+            }, 200);
+        }
+    </script>
+
+</body>
+</html>
